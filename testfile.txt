@@ -1,1 +1,1 @@
-main + f1
+main + f1 + f2
