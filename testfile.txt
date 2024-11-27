@@ -1,1 +1,1 @@
-main + feature1 + f2
+main + feature1 + feature2
