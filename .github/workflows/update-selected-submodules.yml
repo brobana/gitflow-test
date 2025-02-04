@@ -26,6 +26,11 @@ jobs:
           echo "COMMITTER_NAME=$COMMITTER_NAME" >> $GITHUB_ENV
           echo "COMMITTER_EMAIL=$COMMITTER_EMAIL" >> $GITHUB_ENV
 
+      - name: Set Git Author Identity from Triggering User
+        run: |
+          git config --global user.name "${{ env.COMMITTER_NAME }}"
+          git config --global user.email "${{ env.COMMITTER_EMAIL }}"
+
       - name: Parse Selected Submodules
         id: parse
         run: |
