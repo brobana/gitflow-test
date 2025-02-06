@@ -66,14 +66,14 @@ jobs:
           #git push origin $NEW_BRANCH
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} $NEW_BRANCH
 
-      - name: Create Pull Request via GitHub API
-        run: |
-          PR_TITLE="Update Submodules"
-          PR_BODY="This PR contains updates to the selected submodules. Please review and merge."
-          BASE_BRANCH="develop"
-          HEAD_BRANCH=$NEW_BRANCH
+#      - name: Create Pull Request via GitHub API
+#        run: |
+#          PR_TITLE="Update Submodules"
+#          PR_BODY="This PR contains updates to the selected submodules. Please review and merge."
+#          BASE_BRANCH="develop"
+#          HEAD_BRANCH=$NEW_BRANCH
 
-          # Create a pull request using GitHub API
-          curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -d "{\"title\":\"$PR_TITLE\", \"body\":\"$PR_BODY\", \"head\":\"$HEAD_BRANCH\", \"base\":\"$BASE_BRANCH\"}" \
-            "https://api.github.com/repos/${{ github.repository }}/pulls"
+#          # Create a pull request using GitHub API
+#          curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+#            -d "{\"title\":\"$PR_TITLE\", \"body\":\"$PR_BODY\", \"head\":\"$HEAD_BRANCH\", \"base\":\"$BASE_BRANCH\"}" \
+#            "https://api.github.com/repos/${{ github.repository }}/pulls"
