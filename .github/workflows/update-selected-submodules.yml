@@ -1,4 +1,4 @@
-name: Update Selected Submodules
+name: Create Branch with Updated Submodules
 
 on:
   workflow_dispatch:
@@ -51,16 +51,18 @@ jobs:
       - name: Create New Branch and Push Updated Submodules
         run: |
           # Checkout the develop branch
-          git checkout develop
-          git pull origin develop
+          #git checkout develop
+          #git pull origin develop
+
+          git branch
 
           # Create a new branch for the update
           NEW_BRANCH="update-submodules-${{ github.run_id }}"
           git checkout -b $NEW_BRANCH
 
           # Test
-          touch t2.txt
-          echo "test2" > t2.txt
+          touch t3.txt
+          echo "test3" > t3.txt
 
           # Commit and push changes
           git add .
