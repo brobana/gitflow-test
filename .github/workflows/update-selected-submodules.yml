@@ -6,6 +6,12 @@ on:
       submodules:
         description: 'Enter submodules to update (comma-separated, e.g., submodule1,submodule2)'
         required: true
+      environment:
+        description: "Select the deployment environment"
+        required: true
+        type: choice
+        options:
+          - develop
 
 jobs:
   update-submodules:
