@@ -63,6 +63,9 @@ jobs:
 
       - name: Create New Branch and Push Updated Submodules
         run: |
+          # Pull latest branch
+          git pull origin ${{ steps.get-branch.outputs.branch }}
+
           # Create a new branch for the update
           NEW_BRANCH="${{ steps.get-branch.outputs.branch }}-update-submodules-${{ github.run_id }}"
           git checkout -b $NEW_BRANCH
