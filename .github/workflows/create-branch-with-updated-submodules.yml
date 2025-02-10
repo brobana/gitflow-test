@@ -50,11 +50,8 @@ jobs:
 
       - name: Create New Branch and Push Updated Submodules
         run: |
-          # Checkout the develop branch
-          #git checkout develop
-          #git pull origin develop
-
-          git branch
+          # Check current branch
+          git branch | grep ^*
 
           # Create a new branch for the update
           NEW_BRANCH="update-submodules-${{ github.run_id }}"
