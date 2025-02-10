@@ -1,4 +1,4 @@
-name: Update Selected Submodules
+name: Create Branch with Updated Submodules
 
 on:
   workflow_dispatch:
@@ -8,10 +8,17 @@ on:
         required: true
 
 jobs:
-  update-submodules:
+  create-branch-with-updated-submodules:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Prevent Execution on Main
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            echo "This workflow cannot run on main. Exiting."
+            exit 1
+          fi
+
       - name: Checkout Repository with Submodules
         uses: actions/checkout@v4
         with:
@@ -26,6 +33,11 @@ jobs:
           echo "COMMITTER_NAME=$COMMITTER_NAME" >> $GITHUB_ENV
           echo "COMMITTER_EMAIL=$COMMITTER_EMAIL" >> $GITHUB_ENV
 
+      - name: Set Git Author Identity from Triggering User
+        run: |
+          git config --global user.name "${{ env.COMMITTER_NAME }}"
+          git config --global user.email "${{ env.COMMITTER_EMAIL }}"
+
       - name: Parse Selected Submodules
         id: parse
         run: |
@@ -37,37 +49,27 @@ jobs:
         run: |
           for submodule in $(echo "$SUBMODULES" | tr ',' ' '); do
             echo "Updating $submodule..."
+            echo "git submodule sync ${submodule}"
             #git submodule sync "$submodule"
+            echo "submodule update --init --recursive --remote ${submodule}"
             #git submodule update --init --recursive --remote "$submodule"
           done
 
-      - name: Create and Push New Branch
+      - name: Create New Branch and Push Updated Submodules
         run: |
-          # Checkout the develop branch
-          git checkout develop
-          git pull origin develop
+          # Check current branch
+          git branch | grep ^*
 
           # Create a new branch for the update
           NEW_BRANCH="update-submodules-${{ github.run_id }}"
           git checkout -b $NEW_BRANCH
 
           # Test
-          touch t1.txt
-          echo "test1" > t1.txt
+          touch t3.txt
+          echo "test3" > t3.txt
 
           # Commit and push changes
           git add .
           git commit -m "Update selected submodules: $SUBMODULES"
-          git push origin $NEW_BRANCH
-
-      - name: Create Pull Request via GitHub API
-        run: |
-          PR_TITLE="Update Submodules"
-          PR_BODY="This PR contains updates to the selected submodules. Please review and merge."
-          BASE_BRANCH="develop"
-          HEAD_BRANCH=$NEW_BRANCH
-
-          # Create a pull request using GitHub API
-          curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -d "{\"title\":\"$PR_TITLE\", \"body\":\"$PR_BODY\", \"head\":\"$HEAD_BRANCH\", \"base\":\"$BASE_BRANCH\"}" \
-            "https://api.github.com/repos/${{ github.repository }}/pulls"
+          #git push origin $NEW_BRANCH
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} $NEW_BRANCH
