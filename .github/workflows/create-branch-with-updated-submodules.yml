@@ -8,10 +8,17 @@ on:
         required: true
 
 jobs:
-  update-submodules:
+  create-branch-with-updated-submodules:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Prevent Execution on Main
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            echo "This workflow cannot run on main. Exiting."
+            exit 1
+          fi
+
       - name: Checkout Repository with Submodules
         uses: actions/checkout@v4
         with:
