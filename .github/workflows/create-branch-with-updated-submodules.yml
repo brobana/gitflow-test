@@ -19,6 +19,12 @@ jobs:
             exit 1
           fi
 
+      - name: Determine branch name
+        id: get-branch
+        run: |
+          echo "Detected branch: ${GITHUB_REF##*/}"
+          echo "branch=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
+
       - name: Checkout Repository with Submodules
         uses: actions/checkout@v4
         with:
@@ -57,11 +63,8 @@ jobs:
 
       - name: Create New Branch and Push Updated Submodules
         run: |
-          # Check current branch
-          git branch | grep ^*
-
           # Create a new branch for the update
-          NEW_BRANCH="update-submodules-${{ github.run_id }}"
+          NEW_BRANCH="${{ steps.get-branch.outputs.branch }}-update-submodules-${{ github.run_id }}"
           git checkout -b $NEW_BRANCH
 
           # Test
