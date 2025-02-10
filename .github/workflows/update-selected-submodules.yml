@@ -59,8 +59,8 @@ jobs:
           git checkout -b $NEW_BRANCH
 
           # Test
-          touch t1.txt
-          echo "test1" > t1.txt
+          touch t2.txt
+          echo "test2" > t2.txt
 
           # Commit and push changes
           git add .
