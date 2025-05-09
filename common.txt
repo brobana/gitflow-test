@@ -1,2 +1,2 @@
-main + f1
+main + f1 + f2
 hotfix2
