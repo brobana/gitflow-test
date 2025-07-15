@@ -1,2 +1,1 @@
-f1
-feature1
+feature.1
