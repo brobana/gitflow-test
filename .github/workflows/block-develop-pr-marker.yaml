@@ -1,0 +1,28 @@
+name: Block PRs with Develop Marker File
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  block-prs-with-develop-marker-file:
+    name: Block Develop Source
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR source branch
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensure full history is fetched
+
+      - name: Fail if develop marker file exists
+        run: |
+          MARKER=".branch-marker/develop-branch.txt"
+
+          if [ -f "$MARKER" ]; then
+            echo "FAILED: This branch contains the develop marker file: $MARKER"
+            echo "This indicates the PR is coming from develop (or was merged with develop)."
+            exit 1
+          fi
+
+          echo "PASSED: No develop marker file found. Safe to proceed."
