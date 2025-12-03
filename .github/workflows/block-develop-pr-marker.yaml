@@ -19,7 +19,7 @@ jobs:
         run: |
           MARKER=".branch-marker/develop-branch.txt"
 
-          if [ -f "$MARKER" && "${{ github.base_ref }}" != "develop" ]; then
+          if [[ -f "$MARKER" && "${{ github.base_ref }}" != "develop" ]]; then
             echo "FAILED: This branch contains the develop marker file: $MARKER"
             echo "This indicates the PR is coming from develop (or was merged with develop)."
             exit 1
