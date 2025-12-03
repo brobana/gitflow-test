@@ -11,8 +11,9 @@ jobs:
       - name: Fail if PR is from develop branch
         run: |
           echo "Source branch: ${{ github.head_ref }}"
-          if [ "${{ github.head_ref }}" = "develop" ]; then
+          if [ "${{ github.head_ref }}" == "develop" ]; then
             echo "NOK: Pull requests from 'develop' branch are not allowed."
             exit 1
           else
             echo "OK: Source branch is allowed."
+          fi
