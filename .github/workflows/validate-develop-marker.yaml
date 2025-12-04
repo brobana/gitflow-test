@@ -18,7 +18,7 @@ jobs:
 
       - name: Check for marker file existence
         run: |
-          MARKER=".branch-marker/develop-branch.txt"
+          MARKER=".github/branch-marker/develop-branch.txt"
 
           echo "Checking for marker file: $MARKER"
 
