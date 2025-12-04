@@ -14,15 +14,29 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0  # Ensure full history is fetched
+      
+      - name: Checkout PR target branch (develop)
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.base_ref }}
+          path: base-branch
 
       - name: Fail if develop marker file exists
         run: |
           MARKER=".github/branch-marker/develop-branch.txt"
+          BASE_MARKER="./base-branch/$MARKER"
 
           if [[ -f "$MARKER" && "${{ github.base_ref }}" != "develop" ]]; then
-            echo "FAILED: This branch contains the develop marker file: $MARKER"
+            echo "FAILED: The source branch contains the develop marker file: $MARKER"
             echo "This indicates the PR is coming from develop (or was merged with develop)."
-            exit 1
+          elif [[ ! -f "$BASE_MARKER" && "${{ github.base_ref }}" == "develop" ]]; then
+            echo "FAILED: The develop branch does not contain the marker file: $MARKER"
+            echo "This indicates the branch may have been overwritten, recreated, or force-pushed."
+            echo "Please work with the AEM DevOps team to recreate the marker file!"
+            echo "File content: \"DEVELOP BRANCH — DO NOT DELETE AND DO NOT MERGE INTO OTHER BRANCHES\""
+          else
+            echo "PASSED: Marker validation successful. Safe to proceed."
+            exit 0
           fi
-
-          echo "PASSED: No develop marker file found. Safe to proceed."
+          exit 1
